@@ -10,6 +10,7 @@ import SelectableOption from '../options/selectableOption';
 import FixedOption, { OptionType } from '../options/fixedOption';
 import InputOption from '../options/inputOption';
 import SearchableIndexEntryOption from '../options/searchableIndexEntryOption';
+import SearchableIndexEntryOptionSubtext from '../options/searchableIndexEntryOptionSubtext';
 import {
   FeatEntry,
   getFeatEntries,
@@ -267,7 +268,7 @@ class _Race extends Step {
   }
 
   setFeatsUi(): void {
-    const featOption: HeroOption = new SearchableIndexEntryOption(this.step, 'items', this.feats ?? [], (featId) => {
+    const featOption: HeroOption = new SearchableIndexEntryOptionSubtext(this.step, 'items', this.feats ?? [], (featId) => {
       const featEntry = this.feats?.find((f) => f._id == featId);
       if (!featEntry) {
         ui.notifications!.error(game.i18n.format('HCT.Error.UpdateValueLoad', { value: 'Feats' }));
@@ -279,8 +280,9 @@ class _Race extends Step {
       $('img', $imgLink)
         .attr('src', featEntry.img ?? MYSTERY_MAN)
         .addClass('hct-hover-shadow-accent');
+      this.$context[0].querySelector('[data-hct_feat_requirement]')!.textContent = featEntry.data.requirements ?? 'None';
     });
-    const $raceFeaturesSection = $('section', $('[data-hct_race_area=feat]', this.$context)).empty();
+    const $raceFeaturesSection =$('div > section', $('[data-hct_race_area=feat]', this.$context)).empty();
     featOption.render($raceFeaturesSection);
     this.stepOptions.push(featOption);
   }
